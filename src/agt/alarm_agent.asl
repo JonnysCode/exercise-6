@@ -9,8 +9,12 @@
   (see failed(AlarmType)).
 */
 best_alarm_type(AlarmType) :-
-  .print("Task 1 - Step 3: Implement the rule for inferring the best ranked alarm type.") &
-  AlarmType = natural_light.
+  alarm_rank(AlarmType1, Rank1) & 
+  alarm_rank(AlarmType2, Rank2) & 
+  ( Rank1 > Rank2 | failed(AlarmType2)) & 
+  not failed(AlarmType1) & 
+  .print("Best alarm type: ", AlarmType1) &
+  AlarmType = AlarmType1.
 
 
 /* Initial goals */
@@ -46,7 +50,12 @@ best_alarm_type(AlarmType) :-
   to the agent that proposed an offer with the best alarm type.
 */
 @select_bid
-+!select_bid : false <-
++!select_bid : 
+  best_alarm_type(AlarmType) &
+  proposal(AlarmType)[source(Agent)]
+<-
+  .print("Accepting proposal ", AlarmType, " from ", agent);
+  .send(Agent, tell, acceptProposal(AlarmType));
 
   // After communicating with the agent that sent the best proposal, the agent
   // waits for 5 sec.
@@ -101,8 +110,7 @@ best_alarm_type(AlarmType) :-
 */
 -!inform_friend_of(maria) : true <-
   .print("I was not able to wake up Maria with any available method.");
-  .print("Task 1 - Step 4: Implement the behavior for asking the assistant agent how to inform Maria's friend.");
-
+  .send(assistant_agent, askHow, {+!inform_friend_of(maria)})
   // After the agent asks the assistant agent, it waits and then attempts
   // to inform again Maria's friend.
   .wait(3000);

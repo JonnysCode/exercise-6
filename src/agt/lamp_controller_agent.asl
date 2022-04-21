@@ -26,7 +26,21 @@ available_offer(wake_up(maria), artificial_light).
 +cfp(Task)[source(Agent)] :
   available_offer(Task, Offer)
 <-
-  .print("Received CALL FOR PROPOSAL for task ", Task, " from ", Agent).
+  .print("Received CALL FOR PROPOSAL for task ", Task, " from ", Agent);
+  .send(Agent, tell, proposal(Offer)).
+
+
+// TASK - STEP 3
++acceptProposal(Offer)[source(Agent)] : true 
+<-
+  .print(Agent, " accepted proposal for ", Offer);
+  !lightOn;
+  .send(Agent, tell, done).
+
+
++!lightOn : true
+<-
+  .print("Turning on the light!").
 
 
 /* Additional behaviors */

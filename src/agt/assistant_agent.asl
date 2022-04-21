@@ -18,8 +18,8 @@ current_time(8).
 <-
   .print("Hello from user agent.");
   .wait(3000);
-
-  .print("Task 1 - Step 1: Implement the behavior for telling the alarm agent its preferred methods of being notified.").
+  .send(alarm, tell, alarm_rank(natural_light, 1));
+  .send(alarm, tell, alarm_rank(artificial_light, 0)).
 
 
 /*
@@ -32,8 +32,7 @@ current_time(8).
 +upcoming_event(Event, Time) : current_time(Time)
 <-
   .print("There is an upcoming event: ", Event, " at ", Time);
-  .print("Task 1 - Step 2: Implement the behavior for asking the alarm agent to achieve wake_up(maria)." ).
-
+  .send(alarm, achieve, wake_up(maria)).
 
 /* TASK 2 - STEP 2
   Behavior for handling goal-achievement addition inform_friend_of(maria).
@@ -43,8 +42,9 @@ current_time(8).
 */
 @inform_friend_of
 +!inform_friend_of(maria) : true <-
-  .print("Task 2 - Step 2: Implement the behavior for dweeting Maria's friend." );
-  .print("(Task 2 - Step 1 requires extending the DweetArtifact.)" ).
+  .print("Informing friend of ", maria, " with a dweet.");
+  makeArtifact("dweet", "tools.DweetArtifact", [], DweetArtId);
+  dweet("Hallo", "Josef").
 
 
 /* Additional behaviors */
